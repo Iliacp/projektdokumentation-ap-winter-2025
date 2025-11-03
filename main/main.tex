@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+\usepackage[german]{babel}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=1.5cm]{geometry}
+\usepackage{amsmath, graphicx, listings, parskip, float, lastpage, fancyhdr}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{glossaries}
+\usepackage{lipsum}
+\input{../common/metadata.tex}
+
+\makeglossaries
+\input{../common/glossary.tex}
+
+% The command \setlength{\parskip}{0pt} sets the length of the vertical space between paragraphs to zero. By default, LaTeX adds vertical space between paragraphs to help distinguish them visually. This space is known as the "paragraph skip" or "parskip," for short.
+\setlength{\parskip}{0pt}
+\setlength{\headheight}{20pt}
+
+
+\begin{document}
+
+
+% The \pagenumbering{gobble} command removes page numbering from the title page, the abstract and the table of contents. 
+% It is suspended by the later use of \pagenumbering{arabic}.
+\pagenumbering{gobble}
+\input{title-page.tex}
+\pagebreak
+
+
+% This command changes the color of links only for the table of contents.
+{
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+}
+\pagebreak
+
+\printglossary[type=\acronymtype, nonumberlist]
+\pagebreak
+
+% The \pagenumbering{arabic} command is used on the first actual page (i.e., after the table of contents) to start page numbering with Arabic numerals.
+% \pagenumbering{arabic} suspends the previous \pagenumbering{gobble} command.
+\pagenumbering{arabic}
+
+
+% This command applies some styling to the header and footer.
+\pagestyle{fancy}
+
+
+% Both commands clear the default header and footer content, respectively.
+\fancyhead{}
+\fancyfoot{}
+
+
+% This command displays the project name on the right side of the header
+% \projectTitle is defined in the metadata.tex file
+\rhead{\projectTitle}
+
+
+% This command displays the author's name on the left side of the footer
+% \authorName is defined in the metadata.tex file
+\lfoot{\authorName}
+
+
+% \rfoot: This sets the footer's content on the page's right side.
+% \thepage: This is a LaTeX command that expands to the current page number.
+% \pageref*{LastPage}: This command extends to the page number of the last page in the document. The * after \pageref suppresses the hyperlink usually created if you used just \pageref{LastPage}.
+\rfoot{\thepage\ von \pageref*{LastPage}}
+
+
+\input{../sections/index.tex}
+\pagebreak
+
+
+
+\bibliographystyle{alpha}
+\bibliography{../bib/sample}
+\end{document}
