@@ -13,3 +13,6 @@
 *.synctex.gz
 *.toc
 *.bib
+main/main.acn
+main/main.acr
+main/main.alg

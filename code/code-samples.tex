@@ -1,0 +1,60 @@
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\textbf{Anmerkung:} Die folgenden Codebeispiele sind Auszüge aus dem tatsächlichen Quellcode.
+
+Allerdings wurden deutschsprachige Kommentare und Erklärungen hinzugefügt, um den Code ohne
+weiteren Kontext verständlich zu machen. Im tatsächlichen Quellcode sind diese Kommentare
+nicht vorhanden.
+
+Außerdem wurden einige für das Projekt nicht relevante Teile des Codes mit
+ihren Imports und Abhängigkeiten weggelassen, um den Leser nicht mit irrelevanten Details
+zu überladen. Einige Klassen- und Variablennamen wurden verkürzt/vereinfacht.
+
+Umlaute in den Kommentaren wurden aus technischen Gründen entfernt (z.B. "ä" zu "ae").
+
+\lstinputlisting[language=JavaScript, float=h, caption={Provider von \texttt{DeviceActions}}, label={code:frontend-action-registration}]{../code/device-actions.provider.ts}
+
+\vspace{1em}
+
+\lstinputlisting[language=JavaScript, float=h, caption={Registrierung des \texttt{DeviceAnalysisDeviceActions} in der Secoris-Gerätekachel}, label={code:frontend-secoris-action-registration}]{../code/secoris-search-result-card.component.ts}
+
+\vspace{1em}
+
+\lstinputlisting[language=JavaScript, float=h, caption={Implementierung des \texttt{DeviceAnalysisProvider} für Secoris}, label={code:frontend-secoris-device-analysis-provider}]{../code/secoris-device-analysis.provider.ts}
+
+\vspace{1em}
+
+\lstinputlisting[language={[Sharp]C}, float=h, caption={Integrationstest der Default-Implementierung des \texttt{IDeviceAnalysisRepository}}, label={code:backend-integration-test}]{../code/DefaultDeviceAnalysisRepositoryTests.cs}

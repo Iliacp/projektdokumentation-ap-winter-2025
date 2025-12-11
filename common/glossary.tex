@@ -1,5 +1,67 @@
 \newacronym{abus}{ABUS SC}{ABUS Security Center GmbH \& Co. KG}
-
-\newacronym{ts}{TS}{Technischer Support}
-
 \newacronym{portal}{Portal}{ABUS Cloud-Portal}
+
+\newacronym{ts}{TS}{\Gls{ts-gls}}
+\newacronym{pm}{PM}{\Gls{pm-gls}}
+
+\newacronym{di}{DI}{Dependency Injection}
+
+\newglossaryentry{collection}
+{
+    name=collection,
+    description={
+        Im Kontext der MongoDB ist eine Collection ein Container für Dokumente mit (meist) ähnlicher Struktur,
+        ähnlich wie eine Tabelle in einer relationalen Datenbank}
+}
+
+\newglossaryentry{mongodb}
+{
+    name=MongoDB,
+    description={
+        MongoDB ist eine dokumentenorientierte NoSQL-Datenbank. Anstatt Daten in Tabellen zu speichern,
+        wie es bei relationalen Datenbanken der Fall ist, speichert MongoDB Daten in
+        flexiblen BSON \textit{(Binary JSON)} Dokumenten}
+}
+
+\newglossaryentry{ts-gls}
+{
+    name=Technischer Support,
+    description={
+        Der \acrfull{ts} ist eine Mitarbeiterrolle bei \acrshort{abus}, die Kunden bei technischen Problemen mit
+        ihren Geräten unterstützt. Ein \acrshort{ts} hat Zugriff auf das \acrshort{portal} und kann dort
+        Geräte-Details einsehen, Fernwartungsaktionen durchführen etc. Dafür benötigt er aber von dem jeweiligen
+        \Gls{facherrichter} oder \Gls{endnutzer} eine Freigabe}
+}
+
+\newglossaryentry{pm-gls}
+{
+    name=Produktmanager,
+    description={
+        Der \acrfull{pm} ist eine Mitarbeiterrolle bei \acrshort{abus}, die für eine Produktlinie
+        (z.B. Secoris) verantwortlich ist. Ein \acrshort{pm} kann ungenutzte Geräte im \acrshort{portal}
+        zurücksetzen/löschen und die Firmware-Versionen verwalten. Außerdem ist er die nächste
+        Anspruchsperson für den \acrshort{ts} bei Problemen, die dieser nicht lösen kann}
+}
+
+\newglossaryentry{facherrichter}
+{
+    name=Facherrichter,
+    description={
+        Ein Facherrichter ist ein Händler oder Vertriebspartner, der die Produkte von \acrshort{abus}
+        an Endkunden verkauft. Sie sind Kunden von \acrshort{abus}. \\
+        Ein Facherrichter installiert und ggf. wartet Geräte von
+        \acrshort{abus} bei einem Endkunden, z.B. einem Lebensmittelladen. Bei Problemen mit einem Gerät
+        sind die Facherrichter der erste Ansprechpartner. Sie können alle Gerätedetails im Cloud-Portal
+        sehen und das Gerät aus der Ferne warten. Falls sie nicht weiterhelfen können, erreicht die
+        Anfrage den TS}
+}
+
+\newglossaryentry{endnutzer}
+{
+    name=Endnutzer,
+    description={
+        Die Endnutzer können sowohl Privat- als auch Gewerbekunden sein.
+        Sie sind Kunden von \acrshort{abus}. Privatkunden dürfen ein
+        Gerät selbst installieren und verwalten. Gewerbekunden dagegen müssen sich aus
+        Versicherungsschutzgründen an einen qualifizierten Facherrichter wenden}
+}
