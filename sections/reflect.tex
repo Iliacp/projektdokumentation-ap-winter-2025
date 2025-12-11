@@ -1,13 +1,70 @@
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{lightgreen}{cmyk}{0.43, 0, 0.79, 0}
+
 \section{Fazit}
 
     \subsection{Soll-/Ist-Vergleich}
 
-    \lipsum[1]
+    \begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Phase} & \textbf{Geplante Zeit (Stunden)} & \textbf{Tatsächliche Zeit (Stunden)} & \textbf{Differenz (Stunden)} \\
+    \hline
+    \rowcolor{lightgray} \textbf{1} & \textbf{12} & \textbf{11} & \textbf{-1} \\
+    1.1 & 2 & 2 &  \\
+    1.2 & 3 & 2 & -1 \\
+    1.3 & 1 & 2 & +1 \\
+    1.4 & 5 & 4 & -1 \\
+    1.5 & 1 & 1 &  \\
+    \rowcolor{lightgray} \textbf{2} & \textbf{50} & \textbf{52} & \textbf{+2} \\
+    2.1 & 18 & 26:30 & +8:30 \\
+    2.2 & 5 & 5 &  \\
+    2.3 & 18 & 14:30 & -3:30 \\
+    2.4 & 8 & 5 & -3 \\
+    2.5 & 1 & 1 &  \\
+    \rowcolor{lightgray} \textbf{3} & \textbf{5} & \textbf{4} & \textbf{-1} \\
+    3.1 & 2 & 2 &  \\
+    3.2 & 2 & 1 & -1 \\
+    3.3 & 1 & 1 &  \\
+    \rowcolor{lightgray} \textbf{4} & \textbf{13} & \textbf{13} &  \\
+    4.1 & 10 & 10 &  \\
+    4.2 & 3 & 3 &  \\
+    \rowcolor{lightgreen} \textbf{Insg.} & \textbf{80} & \textbf{80} &  \\
+    \hline
+    \end{tabular}
+    \caption{Soll-/Ist-Vergleich der Projektphasen}
+    \end{table}
+
+    Das Zeitbudget vom 80 Stunden wurde wie geplant eingehalten. Es gab jedoch Abweichungen in den einzelnen Phasen, am meisten in
+    der Implementierungsphase. Die Frontend-Implementierung hat deutlich mehr Zeit in Anspruch genommen als geplant,
+    während die Backend-Implementierung weniger Zeit benötigte.
+
+    Dafür gab es zwei Hauptgründe. Zum einen gab es Herausforderungen bei der Implementierung der Auswertungsansicht im Frontend.
+    Erst tief in der Implementierung wurde klar, dass die initiale Idee nicht sinnvoll umsetzbar war und eine alternative Lösung gewählt werden musste.
+    Dadurch entstand Mehrarbeit, die nicht eingeplant war.
+
+    Der zweite Grund für die Abweichung war die Annahme, dass ich viel mehr Erfahrung im Frontend habe als im Backend und daher
+    für das Backend mehr Zeit brauchen würde. Es zeigte sich jedoch, dass die Backend-Implementierung relativ unkompliziert war.
+    Dadurch benötigte ich dort weniger Zeit, als für die Auswertungsansicht im \acrshort{portal} ursprünglich vorgesehen war —
+    trotz meiner geringeren Erfahrung im Vergleich zum Frontend.
 
     \subsection{Erkenntnisse}
 
-    \lipsum[1]
+    In diesem Projekt war die Entscheidung, das ursprüngliche Konzept für die Auswertungsansicht zu verwerfen und
+    stattdessen einen Dialog zu verwenden, entscheidend für den erfolgreichen Abschluss der Implementierung innerhalb des Zeitrahmens.
+    Hätte ich weiter an dem ursprünglichen Konzept festgehalten, wäre die Implementierung wahrscheinlich nicht rechtzeitig fertig geworden.
+    In der Zukunft sollte ich am besten noch früher im Prozess solche unnötig komplexen Konzepte erkennen und
+    auf deren Vereinfachung bestehen.
+
+    Außerdem hat sich die Entscheidung, \texttt{ng2-charts} nicht zu verwenden, als richtig erwiesen. Nach dem Abschluss der Implementierung unterstützte die Wrapper-Bibliothek
+    die letzten zwei Versionen von Angular nicht mehr vollständig, was ein Anzeichen für mangelnde Wartung ist. Hätte ich die Bibliothek verwendet, würden in der Zukunft
+    wahrscheinlich Kompatibilitätsprobleme beim Upgrade auf neuere Angular-Versionen auftreten. \texttt{Chart.js} dagegen hängt gar nicht von Angular ab und ist daher zukunftssicherer.
 
     \subsection{Ausblick}
 
-    \lipsum[1]
+    Das neue Feature zur Auswertung der Gerätedaten wird mit dem nächsten Release im ersten Quartal 2026 ausgeliefert.
+    Die Ansprechpartner von \acrshort{abus}, die gleichzeitig die Nutzer davon sind, haben das Feature bereits getestet
+    und für gut befunden, was auf eine erfolgreiche Einführung schließen lässt. Das Feature wurde so gebaut, dass es
+    in der Zukunft leicht erweitert werden kann, z.B. durch Hinzufügen neuer Diagrammtypen oder Filteroptionen, auch
+    gerätespezifisch.

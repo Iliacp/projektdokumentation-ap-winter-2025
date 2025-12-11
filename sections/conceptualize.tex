@@ -1,17 +1,118 @@
 \section{Konzeptionsphase}
 
+    \subsection{Namensgebung}
+
+    Das zu implementierende Feature wird im Code als \textit{Device Analysis} bzw. \textit{Message Statistics} bezeichnet.
+    Device Analysis ist der Oberbegriff für alle Arten von Auswertungen, die in der Zukunft möglicherweise hinzugefügt werden.
+    Message Statistics ist die konkrete Auswertung der Gerätenachrichten, die in diesem Projekt implementiert wird.
+    Die beiden Begriffe werden je nach Kontext synonym verwendet.
+
     \subsection{Backend-Architektur}
 
-    \lipsum[1]
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{../figures/backend-overview.png}
+        \caption{
+            Allgemeine Übersicht der Backend-Architektur
+        }
+        \label{fig:backend-overview}
+    \end{figure}
 
-    \subsection{Frontend-Architektur}
+    Das Backend ist in ASP.NET Core als ein modularer Monolith aufgebaut. Es besteht aus dem Common-Modul und mehreren Device-Modulen, die keine
+    Abhängigkeiten untereinander haben dürfen. Eine visuelle Darstellung der Architektur ist in der Abbildung \ref{fig:backend-overview} zu sehen.
 
-    \lipsum[1]
+    \begin{itemize}
+        \item Das \texttt{Common-Modul} stellt geräteübergreifende Features und Funktionalitäten bereit, wie z.B. Authentifizierung, Profilverwaltung
+        und Gerätesuche.
+        \item Jedes \texttt{Device-Modul} implementiert eigene Controller, Services und Repositories, um die jeweiligen
+        Anforderungen zu erfüllen. Sie können alle Funktionalitäten des Common-Moduls nutzen, aber nicht umgekehrt.
+        \item Wenn ein Feature im Common-Modul gerätespezifische Daten oder Logik benötigt, wird dafür meist das
+        \textit{Strategy-Pattern} verwendet. Dabei wird ein Interface im Common-Modul definiert,
+        das von den Device-Modulen implementiert und in der \textit{ASP.NET Core \acrfull{di}} registriert wird.
+    \end{itemize}
 
-    \subsection{Frontend-UI}
-
-    \lipsum[1]
+    Die Device Analysis ist genau so ein Feature. Es gibt eine allgemeine Implementierung, die im Common-Modul
+    implementiert ist. Die Device-Module können ihre eigenen Implementierungen eines im Common-Modul definierten Interfaces bereitstellen und
+    sich somit im Common-Modul registrieren. Je nachdem ob eine Implementierung für ein Gerätetyp vorhanden ist oder nicht, wird diese
+    oder eine Standard-Implementierung im Common-Modul verwendet. Dies entspricht dem Strategy-Pattern.
 
     \subsection{Rest API}
 
-    \lipsum[1]
+    Der Endpunkt wird unter dem Pfad \texttt{api/core/DeviceAnalysis/\{deviceId\}/MessageStatistics} implementiert. Dieser Pfad folgt dem bestehenden Muster (api/[Modul]/[Feature]/\{deviceId\}) und ist leicht verständlich.
+    Außerdem ermöglicht dieses Schema eine einfache Erweiterung in der Zukunft, falls weitere Analyse-Endpunkte neben der MessageStatistics hinzugefügt werden sollen.
+
+    Die Device-Id wird als Pfadparameter übergeben. Alle anderen Parameter werden als Query-Parameter übergeben. Das sind:
+    \begin{itemize}
+        \item \texttt{from}: Startdatum der Auswertung im ISO 8601 Format (z.B. 2023-01-01T00:00:00Z)
+        \item \texttt{to}: Enddatum der Auswertung im ISO 8601 Format (z.B. 2023-01-07T23:59:59Z)
+        \item \texttt{deviceType}: Der Typ des Geräts als \textit{string}. Dies bestimmt, welches Device-Modul die Anfrage verarbeitet. Das Backend kann den Typ aus der Device-Id nicht ableiten, ohne
+        zusätzliche Abfragen in der Datenbank durchzuführen. Daher muss der Client den Typ explizit angeben.
+    \end{itemize}
+
+    Die Antwort ist ein JSON-Objekt, das die Nachrichtentypen und deren Anzahl im angegebenen Zeitraum enthält. Ein Beispiel für die Antwortstruktur ist wie folgt:
+    \begin{verbatim}
+    {
+        "connectEvent": 150,
+        "assignmentChange": 35,
+        "firmwareUpdate": 20
+    }
+    \end{verbatim}
+
+    \subsection{Frontend-Architektur}
+
+    Das Frontend ist in Angular als eine Single-Page Application (SPA) aufgebaut. Ähnlich wie im Backend gibt es Common-Module, Feature-Module und Device-Module.
+    \begin{itemize}
+        \item Die \texttt{Common-Module} enthalten feature- und geräteübergreifende Komponenten, Services und Utilities, die von allen anderen Modulen genutzt werden können.
+        \item Die \texttt{Feature-Module} sind für nicht-gerätespezifische aber selbstständige Features zuständig, wie z.B. Suchseite, Profilseite usw.
+        \item Für jeden Gerätetyp gibt es ein eigenes \texttt{Device-Modul}, das die gerätespezifischen Komponenten, Services und Routen enthält und sie bei den Feature-Modulen registriert.
+        \item Für nicht-gerätespezifische Komponenten, die aber nur in den Device-Modulen verwendet werden, gibt es ein \texttt{Device-Common-Modul}. Darin werden z.B. gemeinsame UI-Komponenten
+        für die Geräte-Detailansicht bereitgestellt.
+    \end{itemize}
+
+    Die Auswertungsansicht soll in jede Geräte-Detailansicht als Tab eingebaut werden. Daher wird sie einmal im Device-Common-Modul implementiert und von den Device-Modulen
+    genutzt. Allerdings muss das Routing und die Anzeigelogik von Tabs in jedem Device-Modul geändert werden, da jedes Modul seine eigenen Routen und Tabs verwaltet.
+    Damit die Rollen \acrshort{pm} und \acrshort{ts} ohne Freigabe durch den Facherrichter auf die Auswertungsansicht zugreifen können, muss die Sichtbarkeit der Tabs
+    in allen Device-Modulen überarbeitet werden.
+
+    \subsection{Frontend-UI}
+
+    Grundsätzlich sind zwei bestehende Ansichten im Frontend relevant: die Suchseite und die Geräte-Detailansicht.
+    Auf den folgenden Abbildungen sind die beiden Ansichten dargestellt:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{../figures/search-screen.png}
+        \caption{
+            Suchseite aus Sicht eines \acrshort{ts} (mit Mock-Daten)
+        }
+    \end{figure}
+
+    Beim Klicken auf eine Gerätekachel kommt man auf die Geräte-Detailansicht (vorausgesetzt, man
+    hat Zugriff auf das Gerät):
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{../figures/device-detail-screen.png}
+        \caption{
+            Geräte-Detailansicht aus Sicht eines \Gls{facherrichter}s (mit Mock-Daten)
+        }
+    \end{figure}
+
+    Die Auswertungsansicht wird als ein Tab in der Geräte-Detailansicht implementiert. Der Tab enthält eine Auswahlmöglichkeit für den Zeitraum der Auswertung
+    (letzte 24 Stunden, letzte 7 Tage, letzter Monat usw.) und eine Darstellung der Gerätenachrichten in einem horizontalen Balkendiagramm. An der x-Achse
+    wird die Anzahl der Nachrichten und an der y-Achse der Nachrichtentyp angezeigt.
+
+    Für einen \acrshort{pm}, der davor auf die Geräte-Detailansicht gar keinen Zugriff hatte, wird dies der einzige Tab sein, den er sehen kann. Für einen \acrshort{ts},
+    der keinen Zugriff auf das Gerät hat, wird dies der einzig \textit{zugängliche} Tab sein. Andere Tabs wie Fernwartung, Logs usw. werden zwar in der Tab-Leiste angezeigt,
+    leiten aber zu einer Seite weiter, die den fehlenden Zugriff erklärt. Falls der \acrshort{ts} Zugriff auf das Gerät hat, werden alle Tabs wie gewohnt angezeigt.
+    Wenn ein \acrshort{ts} ohne Gerätezugriff auf einen unzugänglichen Tab klickt, wird stattdessen ein Tab angezeigt, das den fehlenden Zugriff erklärt.
+
+    Ein Mockup der Auswertungsansicht wurde von dem UI/UX-Designer von \acrshort{abus} bereitgestellt\footnote{
+        Das Mockup kann nicht zur Dokumentation beigefügt werden, da es von dem Designer gelöscht wurde, nachdem ein neues Design gefordert wurde.
+        Dies wird im Kapitel \ref{sec:implementation-frontend} erläutert.}. Die Darstellung des Diagramms wurde allerdings mir überlassen, da sie
+    stark von der gewählten Chart-Bibliothek abhängt.
+
+    Die Chart-Bibliothek \textbf{Chart.js} wurde ausgewählt, da sie eine gute Balance zwischen Funktionsumfang, Einfachheit und Performance bietet. Außerdem hat sie viel Support
+    von der Community und ist gut dokumentiert. Es gibt zwar einen Angular-Wrapper für Chart.js namens \textbf{ng2-charts}, aber sie bietet nichts weiteres als eine \texttt{provideCharts()}
+    Methode und ein \texttt{BaseChartDirective} für die Chart-Komponenten. Dies ist ziemlich einfach auch ohne den Wrapper zu implementieren, daher wird Chart.js direkt verwendet. So
+    wird eine unnötige Abhängigkeit vermieden.

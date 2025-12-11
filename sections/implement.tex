@@ -2,18 +2,134 @@
 
     \subsection{Backend}
 
-    \lipsum[1]
+    Im Backend wurde ein neuer Controller \texttt{DeviceAnalysisController} im Common-Modul erstellt, der den Endpunkt
+    \texttt{api/core/DeviceAnalysis/{deviceId}/MessageStatistics} bereitstellt. Um die Feature-Implementierung einfach
+    zu halten, wurde auf ein Service Layer verzichtet und die (geräte- und datenbank-unabhängige) Logik direkt im Controller implementiert.
 
-    \subsection{Frontend}
+    Der Controller nutzt die \acrshort{di}, um alle Implementierungen des im Common-Modul definierten Interfaces \texttt{IDeviceAnalysisRepository}
+    zu erhalten. Jede Implementierung ist für einen bestimmten Gerätetyp zuständig und wird im jeweiligen Device-Modul registriert. Der Controller wählt die passende Implementierung
+    basierend auf dem \texttt{deviceType} Query-Parameter aus, indem er die \texttt{IsRepositoryFor(deviceType)} Methode des Interfaces aufruft. Falls keine Implementierung
+    für den angegebenen Gerätetyp gefunden wird, wird die Standard-Implementierung aus dem Common-Modul verwendet.
 
-    \lipsum[1]
+    Die Standard-Implementierung wird in der \acrshort{di} als ein sog. \textit{Keyed Singleton} registriert. Das bedeutet, dass man über das Attribut \texttt{[FromKeyedServices(key)]}
+    \textit{eine bestimmte Implementierung} des Interfaces anfordern kann. So kann die Standard-Implementierung separat von den gerätespezifischen Implementierungen injiziert werden,
+    ohne dass man sie in der \acrshort{di} mit ihrer eigenen Klasse registrieren muss.
+
+    Jede Implementierung des \texttt{IDeviceAnalysisRepository} Interface ist für die Kommunikation mit der jeweiligen Datenbank zuständig.
+    Derzeit gibt es neben der Standard-Implementierung nur eine gerätespezifische Implementierung für das Device-Modul \texttt{Secoris}. Die beiden
+    Implementierungen nutzen dieselbe \Gls{collection} in der \Gls{mongodb}-Datenbank, fragen diese aber auf eine unterschiedliche Weise ab.
+
+    Eine grafische Darstellung der Backend-Architektur des neuen Features ist in der Abbildung \ref{fig:backend-architecture} zu sehen.
+
+    \subsection{Frontend} \label{sec:implementation-frontend}
+
+    Im Frontend wurde mit dem Routing und der Anzeigelogik in den Device-Modulen begonnen, weil das der Teil war, in dem es die größte Unsicherheit gab.
+    Die Implementierung der Auswertung selbst im Device-Common-Modul war relativ einfach, da es nur eine Komponente mit einem Diagramm und einer Datumsauswahl ist.
+    
+    Es stellte sich heraus, dass dies die richtige Entscheidung war, da es erhebliche Herausforderungen bei der Integration der Auswertungsansicht in die Geräte-Detailansicht gab.
+    Die Geräte-Detailansichten waren ursprünglich nicht dafür ausgelegt, dass auch Rollen wie \acrshort{ts} und \acrshort{pm} ohne Freigabe durch den \Gls{facherrichter} auf sie zugreifen können.
+    An vielen Stellen wurde Gerätezugriff als eine Vorbedingung für die Anzeige von Inhalten angenommen, was zu Problemen führte.
+    Dies wurde in der Planungsphase nicht erkannt, da diese Vorbedingung nur implizit in der bestehenden Codebasis vorhanden war und nicht dokumentiert wurde.
+
+    Es zeigte sich zudem, dass das Routing eine erhöhte Komplexität aufweist, siehe dazu Abbildung \ref{fig:frontend-routing}.
+    Dabei muss man beachten, dass das Routing in Angular nicht mit einfachen if/else/switch-Anweisungen gesteuert werden kann,
+    sondern mit sogenannten \textit{Guards}.
+    Es gibt mehrere Arten von Guards in Angular, die jeweils zu einem bestimmten Zeitpunkt im Routing-Prozess ausgeführt werden
+    und dementsprechend verschiedene Daten zur Verfügung haben. Das macht die Implementierung der komplexen Logik noch schwieriger.
+
+    Diese Komplexität führte zu mehreren Herausforderungen während der Implementierung:
+    \begin{itemize}
+        \item Der Code für das Routing und die Anzeigelogik wurde sehr unübersichtlich und schwer wartbar.
+        \item Es war schwierig, alle möglichen Szenarien und Randfälle zu berücksichtigen und zu testen.
+        \item Neue Device-Module in der Zukunft müssen die komplexe Logik ebenfalls implementieren, was zu Fehlern führen kann
+        und die Integration neuer Geräte erschwert.
+        \item Die Implementierung war in der vorgegebenen Zeit nicht vollständig abschließbar.
+    \end{itemize}
+
+    Aus diesen Gründen wurde beschlossen, das initiale Konzept \textbf{nicht} weiter zu verfolgen. Stattdessen wird die Auswertungsansicht
+    als ein Dialogfenster implementiert, der von einem Button in dem Drei-Punkte-Menü der Gerätekachel auf der Suchseite geöffnet wird.
+    Dies kann man in der folgenden Abbildung sehen (Systemanalyse ist der deutsche Begriff für Device Analysis):
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{../figures/card-screen.png}
+        \caption{
+            Gerätekachel mit geöffnetem Drei-Punkte-Menü und Systemanalyse-Button
+        }
+    \end{figure}
+
+    Diese Änderung hat mehrere Vorteile:
+    \begin{itemize}
+        \item Das Menü, die Zugriffslogik und die Registrierung des Buttons sind bereits implementiert,
+        sodass nur noch wenig Setup-Arbeit nötig ist.
+        \item Es gibt keine Änderungen an der Geräte-Detailansicht oder dem Routing, was die Komplexität erheblich reduziert.
+        \item Die Implementierung ist in der restlichen Zeit abschließbar.
+    \end{itemize}
+
+    Die einzig verbleibende Herausforderung sind die Gerätedaten. In der Geräte-Detailansicht ist eine Übersicht
+    der Gerätedaten bereits in einem Sidebar vorhanden. In einem Dialogfenster dagegen nicht -
+    also müssen die Gerätedaten an das Dialogfenster übergeben und dort angezeigt werden.
+    In der folgenden Abbildung ist dieser Dialog dargestellt:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{../figures/dialog-screen.png}
+        \caption{
+            Dialogfenster mit der Auswertungsansicht
+        }
+    \end{figure}
+
+    In wenigen Stunden konnte die neue Implementierung fertiggestellt werden. Die Hauptaspekte der Implementierung sind:
+    \begin{itemize}
+        \item Die Geräte registrieren in ihren Gerätekachel-Komponenten (siehe Quellcode \ref{code:frontend-secoris-action-registration}) eine sog. \textit{DeviceAnalysisAction}, die ein Service im Device-Common-Modul
+        zur Verfügung stellt. Dies erfolgt über eine Methode, die im Quellcode \ref{code:frontend-action-registration} dargestellt ist.
+        \item Der Button nimmt als Abhängigkeit ein \texttt{DeviceAnalysisProvider}, der die gerätespezifischen Daten für die Auswertungsansicht bereitstellt. Ein Beispiel dafür
+        ist die Implementierung für Secoris im Quellcode \ref{code:frontend-secoris-device-analysis-provider}.
+        \item Die Grafik wird wie geplant mit \texttt{Chart.js} umgesetzt.
+    \end{itemize}
 
     \subsection{Tests}
 
+        Die Tests sind für die Qualitätssicherung des neuen Features von entscheidender Bedeutung.
+        Allerdings wird in unserem Entwicklungs-Team kein Testabdeckungsgrad vorgegeben. Es wird
+        pragmatisch entschieden, welche Tests für ein Feature notwendig sind, um dessen Qualität sicherzustellen,
+        ohne dabei zu viel Zeit und Ressourcen für das Schreiben und Warten von Tests aufzuwenden.
+        
+        Deswegen wird im Backend hauptsächlich auf Integrationstests gesetzt, um maximale Abdeckung
+        bei minimalem Aufwand zu erreichen. Im Frontend werden Unit-Tests für die wichtigsten
+        Komponenten und Services geschrieben, um deren Funktionalität zu überprüfen.
+
         \subsubsection{Backend}
 
-        \lipsum[1]
+        Im Backend werden Integrationstests für alle \textit{Repositories} geschrieben, um sicherzustellen, dass sie die Daten korrekt aus der Datenbank abrufen.
+        Diese Tests haben die folgenden Merkmale:
+        \begin{itemize}
+            \item Sie sind in \textit{xUnit} geschrieben, da das Backend bereits dieses Test-Framework verwendet.
+            \item Sie verwenden ein \textit{Test Container} — eine kleine, temporäre Instanz der \Gls{mongodb}-Datenbank, die nur für die Dauer der Tests läuft.
+            Dadurch wird sichergestellt, dass die Tests in einer isolierten Umgebung laufen und nicht von externen Faktoren beeinflusst werden.
+            \item Sie verwenden die Bibliothek \textit{Fluent Assertions}, um die Testergebnisse auf eine lesbare und verständliche Weise zu überprüfen.
+            \item Um Testläufe kurz zu halten, deckt jeder Test so viele Szenarien wie möglich ab. Dies macht sie zwar nicht so isoliert wie Unit-Tests,
+            aber es reduziert die Gesamtanzahl der Tests erheblich.
+            \item Die Tests verwenden ein \textit{Arrange, Act, Assert (AAA)}-Muster, um die Struktur der Tests klar und konsistent zu halten.
+        \end{itemize}
+
+        Ein Beispiel für einen Integrationstest ist im Quellcode \ref{code:backend-integration-test} dargestellt.
 
         \subsubsection{Frontend}
+        
+        Als das erste Konzept für die Frontend-Implementierung verworfen wurde (siehe Abschnitt \ref{sec:implementation-frontend}),
+        mussten auch viele Frontend-Tests verworfen werden, da sie auf dem ursprünglichen Konzept basierten. Nur
+        eine Handvoll Tests konnte wiederverwendet werden.
 
-        \lipsum[1]
+        Für das neue Konzept werden aus folgenden Gründen \textbf{keine} automatisierten Tests geschrieben:
+        \begin{itemize}
+            \item Die Implementierung ist relativ einfach und besteht entweder aus UI-Komponenten oder aus
+            Registrierungslogik, die bereits in anderen Teilen des Codes getestet wurde. Also wären hier
+            \textit{Unit-Tests} nicht sehr nützlich.
+            \item \textit{Integrationstests} werden im Frontend nur für geschäftskritische Features geschrieben,
+            z.B. die Suchseite. Die Auswertungsansicht ist kein geschäftskritisches Feature, daher
+            rechtfertigt sie keine \textit{Integrationstests}.
+            \item Die für das Frontend-Testing eingeteilte Zeit wurde schon für die ursprüngliche Implementierung
+            verwendet. Zeit von anderen Aufgaben abzuzweigen, um Tests zu schreiben, wäre aus oben genannten Gründen
+            nicht effizient gewesen.
+        \end{itemize}

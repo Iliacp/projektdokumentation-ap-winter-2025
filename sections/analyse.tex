@@ -2,18 +2,113 @@
 
     \subsection{Ist-Analyse}
 
-    \lipsum[1]
+    todo
 
     \subsection{Wirtschaftlichkeitsanalyse}
 
+        Für die Conplement AG lohnt sich das Projekt schon deswegen, weil im Vertrag
+        mit der \acrshort{abus} zusätzlich zu den Projektkosten auch ein Gewinnaufschlag
+        vereinbart wurde (die genaue Höhe ist vertraulich). Somit sind die Projektkosten
+        gedeckt und es wird zusätzlich ein Gewinn erzielt.
+
         \subsubsection{Projektkosten}
 
-        \lipsum[1]
+        Die Projektkosten setzen sich aus den Personalkosten der beteiligten Mitarbeiter
+        der Conplement AG zusammen. Alle verwendeten Ressourcen sind bereits im Stundensatz
+        der Mitarbeiter einkalkuliert, sodass keine zusätzlichen Kosten anfallen.
 
-        \subsubsection{Amortisationsrechnung}
+        Für einen Azubi (mich) ist ein Stundensatz von 35€ veranschlagt, während für
+        einen erfahrenen Softwareentwickler ein Stundensatz von 104€ gilt. Das Projekt
+        umfasst insgesamt 80 Stunden, die sich wie folgt aufteilen:
 
-        \lipsum[1]
+        \begin{itemize}
+            \item 75 Stunden Arbeit von mir als Azubi
+            \item 5 Stunden Arbeit von einem erfahrenen Softwareentwickler zur
+            Unterstützung bei der Planung und Code-Reviews
+        \end{itemize}
+
+        Daraus ergibt sich die folgende Berechnung der Projektkosten:
+
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{l r r r}
+                \toprule
+                \textbf{Rolle} & \textbf{Stundensatz} & \textbf{Stunden} & \textbf{Gesamtkosten} \\
+                \midrule
+                Azubi & 35€ & 75 & 2.625€ \\
+                Erfahrener Entwickler & 104€ & 5 & 520€ \\
+                \midrule
+                \textbf{Gesamt} & & & \textbf{3.145€} \\
+                \bottomrule
+            \end{tabular}
+            \caption{Projektkostenübersicht}
+        \end{table}
+
+        \subsubsection{Amortisationsrechnung aus Kundensicht}
+
+        Genaue Zahlen zur Amortisation des Projekts sind schwer zu ermitteln,
+        da das Projekt keinen direkten Umsatz für \acrshort{abus} generiert.
+        Stattdessen spart das Projekt indirekt Kosten, indem es die Effizienz der
+        \acrshort{ts} verbessert.
+
+        Basierend auf Gesprächen mit der \acrshort{abus} und Annahmen über die
+        Arbeitsweise der \acrshort{ts} lassen sich folgende Schätzungen treffen:
+
+        \begin{itemize}
+            % \item Ein \acrshort{ts} arbeitet 35 Stunden pro Woche. - nicht relevant
+            \item Der Stundensatz eines \acrshort{ts} beträgt ca. 90€ (angenommen).
+            \item Durch das neue Feature wird 30 Minuten weniger für eine Support-Anfrage
+            benötigt (angenommen).
+            \item Bei ungefähr 10\% aller Geräte wird pro Jahr eine Support-Anfrage gestellt,
+            die durch das neue Feature vereinfacht wird (angenommen).
+            \item Es sind insgesamt 6572 Geräte im \acrshort{portal} registriert (Stand: December 2025).
+        \end{itemize}
+
+        Daraus ergeben sich folgende Berechnungen:
+
+        \begin{itemize}
+            \item Anzahl der Support-Anfragen pro Jahr:
+            \[
+                6572 \text{ Geräte} \times 10\% = 657,2 \approx 657 \text{ Anfragen}
+            \]
+            \item Zeitersparnis pro Jahr durch das neue Feature:
+            \[
+                657 \text{ Anfragen} \times 0,5 \text{ Stunden} = 328,5 \text{ Stunden}
+            \]
+            \item Kosteneinsparung pro Jahr:
+            \[
+                328,5 \text{ Stunden} \times 90\text{€}/\text{Stunde} = 29.565\text{€}
+            \]
+            \item Kosteneinsparung pro Monat:
+            \[
+                29.565\text{€} / 12 = 2.463,75\text{€}
+            \]
+        \end{itemize}
+
+        Also wird sich das Projekt für die \acrshort{abus} bereits nach etwa
+        \[
+            3.145\text{€} / 2.463,75\text{€} \approx 1,28 \text{ Monate} \approx 2 \text{ Monate}
+        \]
+        amortisieren, wenn die Annahmen zutreffen.
         
-        \subsubsection{Weitere Vorteile}
+        Aber auch bei Abweichungen von diesen Annahmen ist es sehr wahrscheinlich,
+        dass sich das Projekt innerhalb weniger Monate amortisiert. Z.B. wenn nur 5\%
+        der Geräte pro Jahr eine Support-Anfrage stellen, bei der das neue Feature nur 15
+        Minuten spart, und der Stundensatz eines \acrshort{ts} nur 75€ beträgt, würde sich
+        das Projekt immer noch innerhalb von etwa einem halben Jahr amortisieren.
+        
+        \subsubsection{Nicht-monetäre Vorteile für den Kunden}
 
-        \lipsum[1]
+        todo 
+
+        % Ein sehr großer Vorteil des zu implementierenden Features ist die verminderte
+        % Arbeitslast der \acrshort{pm} und der Entwickler unseres Entwicklungs-Teams.
+        % Da die \acrshort{ts} nun selbstständig einfache Analysen der Gerätedaten durchführen können,
+        % müssen sie nicht mehr so oft die \acrshort{pm} oder die Entwickler um Hilfe bitten.
+        % Dies spart nicht nur Geld, sondern öffnet auch Kapazitäten für die \acrshort{pm} und die Entwickler,
+        % sodass sie sich auf wichtigere Aufgaben konzentrieren können.
+
+        % Außerdem müssen die \acrshort{ts} mit dem neuen Feature nicht mehr so oft eine
+        % Zugriffsanfrage an den \Gls{facherrichter} stellen, um technische Probleme zu identifizieren.
+        % Dies verbessert die Effizienz der \acrshort{ts} und die Zufriedenheit der \Gls{endnutzer}
+        % und \Gls{facherrichter}, da ihr Problem schneller gelöst werden kann.

@@ -14,11 +14,11 @@ Die .bib-Datei wird normalerweise mit einem BibTeX-Programm bearbeitet, das eine
 
 Innerhalb des LaTeX-Dokuments können Verweise auf die Quellen durch Verwendung spezieller Befehle und Referenzschlüssel erstellt werden, die in der .bib-Datei definiert sind. Durch Verwendung dieser Befehle können automatisch nummerierte Verweise im Text und eine formatierte Bibliografie am Ende des Dokuments erstellt werden.
 
-## code/pythonCode.py
-Zur besseren Übersichtlichkeit sind Quellcodedateine (wie die beispielhafte pythonCode.pydatei) in diesem Verzeichnis abgelegt. Sie können im Dokument durch spezielle Befehle eingebunden und formatiert werden kann.
+## code
+Zur besseren Übersichtlichkeit sind Quellcodedateien in diesem Verzeichnis abgelegt. Sie können im Dokument durch spezielle Befehle eingebunden und formatiert werden.
 
-## images
-Alle Abbildungen, die im Dokument eingebunden sind, werden in diesem Verzeichnis abgelegt.
+## figures
+In diesem Verzeichnis sind Diagramme und Grafiken abgelegt, die im Dokument verwendet werden.
 
 ## sections
 Zur besseren Übersichtlichkeit enthält dieses Verzeichnis einzelne Dateien zu den jeweiligen Kapiteln im Dokument. Diese werden in der main.tex eingebunden.
@@ -28,5 +28,8 @@ In der main.tex Datei werden die grundlegenden Einstellungen des Dokuments festg
 
 In der main.tex Datei werden auch andere Teildateien des Dokuments eingebunden, die den tatsächlichen Inhalt des Dokuments enthalten. Diese Teildateien können beispielsweise Kapitel, Abschnitte oder Referenzdateien sein, die die Bibliografie des Dokuments enthalten.
 
-## meta.tex
+## glossary.tex
+Hier sind die Begriffe und Abkürzungen definiert, die im Dokument verwendet werden. Diese können im Text durch ihren jeweiligen Befehl eingebunden werden. Das Glossar wird direkt nach der Inhaltsangabe eingefügt.
+
+## metadata.tex
 In der metadata.tex Datei sind die Metadaten wie den Titel des Dokuments, den Autor, das Veröffentlichungsdatum und ähnliche Informationen enthalten. Diese können im Dokument durch ihren jeweiligen Befehl eingebunden werden. Sie dienen dazu, grundlegende Informationen, die ggf. an unterschiedlichen Stellen im Dokument auftauchen, in einer zentralen Stelle verwalten zu können.

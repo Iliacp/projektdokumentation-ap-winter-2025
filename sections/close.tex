@@ -1,17 +1,76 @@
-\section{Abnahme und Deploymen}
+\section{Abnahme und Deployment}
 
     \subsection{Code-Review}
 
-    \lipsum[1]
+    Code-Reviews fanden sowohl während der Implementierungsphase als auch nach deren Abschluss statt.
+    Während der Implementierung wurden regelmäßig kleinere Code-Reviews durchgeführt, um sicherzustellen,
+    dass die Entwicklung in die richtige Richtung geht und um frühzeitig Feedback zu erhalten.
+
+    Nach Abschluss der Implementierung wurde ein \textit{Pull Request} erstellt und von zwei Entwicklern
+    (einem für das Backend und einem für das Frontend) überprüft. Dabei sind keine größeren Probleme
+    festgestellt worden. Es gab nur einige Anmerkungen bezüglich Code-Stil, dupliziertem Code und einigen
+    kleineren Verbesserungen, die schnell behoben wurden.
 
     \subsection{Deployment}
 
-    \lipsum[1]
+    Das \acrshort{portal} hat drei Umgebungen: Dev, Stage und Prod (Produktion). Auf Dev sind meist nur
+    Entwickler aktiv, die dort neue Features implementieren und testen. Auf Stage können auch bestimmte
+    Mitarbeiter von \acrshort{abus} testen, ob alles wie erwartet funktioniert. Prod ist die Live-Umgebung,
+    die von den Endbenutzern genutzt wird.
 
-    \subsection{Einführung}
+    Nachdem die Implementierung abgeschlossen war, lokal getestet wurde und das Code-Review bestanden hat,
+    wurde die neue Version des Backends und Frontends gebaut, getestet und auf die Dev-Umgebung
+    deployed. Dort wurde nochmal manuell getestet, ob alles wie erwartet funktioniert.
 
-    \lipsum[1]
+    An dieser Stelle wurde ein Bug gefunden. Dies wird in der nächsten Sektion beschrieben. Nachdem der Bug
+    behoben war, wurde die neue Version nochmal auf die Dev-Umgebung deployed und getestet. Diesmal
+    funktionierte alles wie erwartet und der Build wurde auf die Staging-Umgebung deployed.
+
+    Auf die Prod-Umgebung wird das neue Feature erst mit dem nächsten Release deployed, da jedes Deployment
+    auf Prod ein Release darstellt und dies darf nur zu bestimmten, von \acrshort{abus} eingeplanten Terminen
+    durchgeführt werden.
+
+    \subsection{Bugfixes}
+
+    Als das neue Feature in der Dev-Umgebung getestet wurde, wurde ein Bug gefunden: \\
+    Das Diagramm konnte nicht geladen werden, da die API-Anfrage an das Backend mit einem 400-Fehler
+    (Bad Request) fehlschlug. Nach einer Untersuchung des Problems wurde festgestellt, dass
+    das Backend die Anfrage ablehnte, weil das Enddatum in der Zukunft lag.
+    Dies lag daran, dass das Backend und das Frontend unterschiedliche Zeitzonen verwendeten.
+    Das Backend verwendete UTC (Coordinated Universal Time), während das Frontend die lokale
+    Zeitzone des Benutzers verwendete (in diesem Fall UTC+1).
+
+    Das Backend wurde initial so implementiert, dass es eine Fehlerantwort zurückgibt,
+    wenn das Enddatum in der Zukunft liegt. Dies war eine bewusste Entscheidung,
+    um ungültige Anfragen abzuweisen. Allerdings wurde nach einer genaueren Überlegung gesehen,
+    dass dieses Verhalten kein echtes Problem löst und stattdessen den Endpunkt bloß weniger
+    robust macht. Daher wurde beschlossen, dass das Enddatum im Backend in solchen Fällen
+    automatisch auf das aktuelle Datum gesetzt wird.
+
+    Dies hat den Bug behoben und nach einem erneuten Deployment auf die Dev-Umgebung
+    funktionierte das Diagramm wie erwartet. Weitere Bugs wurden nicht gefunden.
+
+    \subsection{Abnahme}
+
+    Nach einer Demonstration des neuen Features für den Projektbetreuer von \acrshort{abus}
+    wurde eine kleine Änderung am Design des Diagramms gewünscht. Die Standartoption für die Zeitauswahl
+    sollte auf \enquote{Letzte 7 Tage} anstatt \enquote{Letztes Jahr} gesetzt werden und eine Option für \enquote{Letzte 24 Stunden}
+    sollte hinzugefügt werden. Diese Änderung wurde kurzfristig implementiert und wieder auf Dev und Stage deployed.
+
+    Danach wurde das neue Feature von dem Projektbetreuer abgenommen. Es gab keine weiteren Änderungswünsche
+    und das Feature wurde für gut befunden.
 
     \subsection{Dokumentation}
 
-    \lipsum[1]
+    Als Entwicklerdokumentation im Backend dient die automatisch generierte \texttt{Swagger}-Dokumentation
+    für die Backend-API. Diese ist unter \url{https://stage.abus-cloud.com/swagger/index.html} erreichbar
+    (siehe Core - \texttt{POST /api/core/DeviceAnalysis/\{deviceId\}/MessageStatistics}). Außerdem wurde auf
+    sprechende Methoden- und Variablennamen geachtet, damit der Code auch ohne zusätzliche Dokumentation
+    verständlich ist.
+    
+    Im Frontend wurde ebenfalls auf sprechende Namen geachtet. Da das Frontend jedoch relativ einfach und
+    selbsterklärend ist, wurde keine zusätzliche Dokumentation erstellt.
+
+    Kundendokumentation ist in Form des abgeschlossenen \textit{Product Backlog Item} in Jira vorhanden. Außerdem wurden zwei
+    Ansprechpartner von \acrshort{abus} eingewiesen, die bei Fragen kontaktiert werden können. Das Feature
+    wird ausschließlich von ABUS-internen Rollen genutzt, daher ist keine weitere Kundendokumentation erforderlich.
