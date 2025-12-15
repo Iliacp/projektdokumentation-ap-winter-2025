@@ -14,7 +14,7 @@ export class SecorisDeviceAnalysisProvider implements DeviceAnalysisDeviceSpecif
     ) {}
 
     async getDeviceAnalysisInfo(deviceId: string): Promise<DeviceAnalysisDeviceSpecificData[]> {
-        // Holen der Geraeteeinstellungen von der API fuer das gegebene deviceId
+        // Holen der Geraeteeinstellungen von der API fuer die gegebene deviceId
         const settings = await lastValueFrom(
             this.secorisService.SettingsDeviceIdGet(deviceId)
         );
