@@ -9,7 +9,6 @@
 *.ist
 *.log
 *.out
-*.pdf
 *.synctex.gz
 *.toc
 main/main.acn
