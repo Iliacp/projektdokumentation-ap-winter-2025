@@ -2,6 +2,8 @@
 
     \subsection{Backend}
 
+    % GENAUER BESCHREIBEN
+
     Im Backend wurde ein neuer Controller \texttt{DeviceAnalysisController} im Common-Modul erstellt, der den Endpunkt
     \texttt{api/core/DeviceAnalysis/{deviceId}/MessageStatistics} bereitstellt. Um die Feature-Implementierung einfach
     zu halten, wurde auf ein Service Layer verzichtet und die (geräte- und datenbank-unabhängige) Logik direkt im Controller implementiert.
@@ -23,7 +25,9 @@
 
     \subsection{Frontend} \label{sec:implementation-frontend}
 
-    Im Frontend wurde mit dem Routing und der Anzeigelogik in den Device-Modulen begonnen, weil das der Teil war, in dem es die größte Unsicherheit gab.
+    % GENAUER BESCHREIBEN
+
+    Im Frontend wurde mit dem \Gls{routing} und der Anzeigelogik in den Device-Modulen begonnen, weil das der Teil war, in dem es die größte Unsicherheit gab.
     Die Implementierung der Auswertung selbst im Device-Common-Modul war relativ einfach, da es nur eine Komponente mit einem Diagramm und einer Datumsauswahl ist.
     
     Es stellte sich heraus, dass dies die richtige Entscheidung war, da es erhebliche Herausforderungen bei der Integration der Auswertungsansicht in die Geräte-Detailansicht gab.
@@ -31,15 +35,15 @@
     An vielen Stellen wurde Gerätezugriff als eine Vorbedingung für die Anzeige von Inhalten angenommen, was zu Problemen führte.
     Dies wurde in der Planungsphase nicht erkannt, da diese Vorbedingung nur implizit in der bestehenden Codebasis vorhanden war und nicht dokumentiert wurde.
 
-    Es zeigte sich zudem, dass das Routing eine erhöhte Komplexität aufweist, siehe dazu Abbildung \ref{fig:frontend-routing}.
-    Dabei muss man beachten, dass das Routing in Angular nicht mit einfachen if/else/switch-Anweisungen gesteuert werden kann,
+    Es zeigte sich zudem, dass das \Gls{routing} eine erhöhte Komplexität aufweist, siehe dazu Abbildung \ref{fig:frontend-routing}.
+    Dabei muss man beachten, dass das \Gls{routing} in Angular nicht mit einfachen if/else/switch-Anweisungen gesteuert werden kann,
     sondern mit sogenannten \textit{Guards}.
-    Es gibt mehrere Arten von Guards in Angular, die jeweils zu einem bestimmten Zeitpunkt im Routing-Prozess ausgeführt werden
+    Es gibt mehrere Arten von Guards in Angular, die jeweils zu einem bestimmten Zeitpunkt im \Gls{routing}-Prozess ausgeführt werden
     und dementsprechend verschiedene Daten zur Verfügung haben. Das macht die Implementierung der komplexen Logik noch schwieriger.
 
     Diese Komplexität führte zu mehreren Herausforderungen während der Implementierung:
     \begin{itemize}
-        \item Der Code für das Routing und die Anzeigelogik wurde sehr unübersichtlich und schwer wartbar.
+        \item Der Code für das \Gls{routing} und die Anzeigelogik wurde sehr unübersichtlich und schwer wartbar.
         \item Es war schwierig, alle möglichen Szenarien und Randfälle zu berücksichtigen und zu testen.
         \item Neue Device-Module in der Zukunft müssen die komplexe Logik ebenfalls implementieren, was zu Fehlern führen kann
         und die Integration neuer Geräte erschwert.
@@ -62,7 +66,7 @@
     \begin{itemize}
         \item Das Menü, die Zugriffslogik und die Registrierung des Buttons sind bereits implementiert,
         sodass nur noch wenig Setup-Arbeit nötig ist.
-        \item Es gibt keine Änderungen an der Geräte-Detailansicht oder dem Routing, was die Komplexität erheblich reduziert.
+        \item Es gibt keine Änderungen an der Geräte-Detailansicht oder dem \Gls{routing}, was die Komplexität erheblich reduziert.
         \item Die Implementierung ist in der restlichen Zeit abschließbar.
     \end{itemize}
 
@@ -79,21 +83,31 @@
         }
     \end{figure}
 
-    In wenigen Stunden konnte die neue Implementierung fertiggestellt werden. Die Hauptaspekte der Implementierung sind:
+
+    %% VLLT. DAS ÜBERSCHREIBEN
+    Die Hauptaspekte der neuen Implementierung sind:
     \begin{itemize}
-        \item Die Geräte registrieren in ihren Gerätekachel-Komponenten (siehe Quellcode \ref{code:frontend-secoris-action-registration}) eine sog. \textit{DeviceAnalysisAction}, die ein Service im Device-Common-Modul
-        zur Verfügung stellt. Dies erfolgt über eine Methode, die im Quellcode \ref{code:frontend-action-registration} dargestellt ist.
-        \item Der Button nimmt als Abhängigkeit ein \texttt{DeviceAnalysisProvider}, der die gerätespezifischen Daten für die Auswertungsansicht bereitstellt. Ein Beispiel dafür
-        ist die Implementierung für Secoris im Quellcode \ref{code:frontend-secoris-device-analysis-provider}.
-        \item Die Grafik wird wie geplant mit \texttt{Chart.js} umgesetzt.
+        \item Die Geräte registrieren in ihren Gerätekachel-Komponenten (siehe Quellcode \ref{code:frontend-secoris-action-registration})
+        eine sog. \textit{DeviceAnalysisAction}, die ein Service im Device-Common-Modul zur Verfügung stellt.
+        Dies erfolgt über eine Methode, die im Quellcode \ref{code:frontend-action-registration} dargestellt ist.
+        Solche \textit{Actions} sind bereits für andere Features wie z.B. Zurücksetzen des Geräts implementiert.
+        Somit können Geräte-Module nur die \textit{Actions} registrieren, die sie tatsächlich unterstützen,
+        und diese ggf. konfigurieren.
+        \item Der Button nimmt als Abhängigkeit ein \texttt{DeviceAnalysisProvider}, der die gerätespezifischen Daten
+        für die Auswertungsansicht bereitstellt. Das ist notwendig, da die Komponente im Device-Common-Modul
+        nicht wissen kann, welche Felder angezeigt werden müssen. Dies muss zur Laufzeit entschieden werden.
+        Ein Beispiel dafür ist die Implementierung für Secoris im Quellcode \ref{code:frontend-secoris-device-analysis-provider}.
+        \item Die Grafik wird wie geplant mit \texttt{Chart.js} umgesetzt. Es wird ein \texttt{Chart}-Objekt
+        in der \texttt{ngOnInit()}-Methode (d.h. beim Initialisieren der Komponente) erstellt und konfiguriert.
+        Bei Änderungen der Daten oder des ausgewählten Zeitraums wird das \texttt{data}-Attribut des \texttt{Chart}-Objekts
+        aktualisiert und die \texttt{update()}-Methode aufgerufen, um die Grafik neu zu rendern.
     \end{itemize}
 
     \subsection{Tests}
 
         Die Tests sind für die Qualitätssicherung des neuen Features von entscheidender Bedeutung.
         Allerdings wird in unserem Entwicklungs-Team kein Testabdeckungsgrad vorgegeben. Es wird
-        pragmatisch entschieden, welche Tests für ein Feature notwendig sind, um dessen Qualität sicherzustellen,
-        ohne dabei zu viel Zeit und Ressourcen für das Schreiben und Warten von Tests aufzuwenden.
+        pragmatisch entschieden, welche Tests für ein Feature notwendig sind, um dessen Qualität sicherzustellen.
         
         Deswegen wird im Backend hauptsächlich auf Integrationstests gesetzt, um maximale Abdeckung
         bei minimalem Aufwand zu erreichen. Im Frontend werden Unit-Tests für die wichtigsten

@@ -1,15 +1,11 @@
 \section{Analysephase}
 
-    \subsection{Ist-Analyse}
-
-    todo
-
-    \subsection{Wirtschaftlichkeitsanalyse}
+    \subsection{Wirtschaftlichkeitsanalyse} \label{sec:profitability-analysis}
 
         Für die Conplement AG lohnt sich das Projekt schon deswegen, weil im Vertrag
-        mit der \acrshort{abus} zusätzlich zu den Projektkosten auch ein Gewinnaufschlag
-        vereinbart wurde (die genaue Höhe ist vertraulich). Somit sind die Projektkosten
-        gedeckt und es wird zusätzlich ein Gewinn erzielt.
+        mit der \acrshort{abus} zusätzlich zu den Projektkosten auch ein Gewinnaufschlag und
+        ein Risikozuschlag vereinbart wurde (die genaue Höhe ist vertraulich). Somit sind die
+        Projektkosten gedeckt und es wird zusätzlich ein Gewinn erzielt.
 
         \subsubsection{Projektkosten}
 
@@ -22,7 +18,7 @@
         umfasst insgesamt 80 Stunden, die sich wie folgt aufteilen:
 
         \begin{itemize}
-            \item 75 Stunden Arbeit von mir als Azubi
+            \item 80 Stunden Arbeit von mir als Azubi
             \item 5 Stunden Arbeit von einem erfahrenen Softwareentwickler zur
             Unterstützung bei der Planung und Code-Reviews
         \end{itemize}
@@ -35,10 +31,10 @@
                 \toprule
                 \textbf{Rolle} & \textbf{Stundensatz} & \textbf{Stunden} & \textbf{Gesamtkosten} \\
                 \midrule
-                Azubi & 35€ & 75 & 2.625€ \\
+                Azubi & 35€ & 80 & 2.800€ \\
                 Erfahrener Entwickler & 104€ & 5 & 520€ \\
                 \midrule
-                \textbf{Gesamt} & & & \textbf{3.145€} \\
+                \textbf{Gesamt} & & & \textbf{3.320€} \\
                 \bottomrule
             \end{tabular}
             \caption{Projektkostenübersicht}
@@ -87,7 +83,7 @@
 
         Also wird sich das Projekt für die \acrshort{abus} bereits nach etwa
         \[
-            3.145\text{€} / 2.463,75\text{€} \approx 1,28 \text{ Monate} \approx 2 \text{ Monate}
+            3.320\text{€} / 2.463,75\text{€} \approx 1,35 \text{ Monate} \approx 2 \text{ Monate}
         \]
         amortisieren, wenn die Annahmen zutreffen.
         
@@ -99,16 +95,44 @@
         
         \subsubsection{Nicht-monetäre Vorteile für den Kunden}
 
-        todo 
+        Es gibt auch mehrere nicht-monetäre bzw. schwer berechenbare Vorteile für die \acrshort{abus}
+        durch das neue Feature:
 
-        % Ein sehr großer Vorteil des zu implementierenden Features ist die verminderte
-        % Arbeitslast der \acrshort{pm} und der Entwickler unseres Entwicklungs-Teams.
-        % Da die \acrshort{ts} nun selbstständig einfache Analysen der Gerätedaten durchführen können,
-        % müssen sie nicht mehr so oft die \acrshort{pm} oder die Entwickler um Hilfe bitten.
-        % Dies spart nicht nur Geld, sondern öffnet auch Kapazitäten für die \acrshort{pm} und die Entwickler,
-        % sodass sie sich auf wichtigere Aufgaben konzentrieren können.
+        \begin{itemize}
+            \item Verringerte Arbeitslast der \acrshort{ts} und \acrshort{pm}
+            \item Weniger Support-Anfragen, die an das Entwicklungsteam eskalieren
+            \item Weniger Freigabeanfragen und somit mehr Zufriedenheit bei \Gls{endnutzer} und \Gls{facherrichter}
+            \item Neue Sichtweise auf die Gerätedaten und Erkenntnisse, die vorher nicht möglich waren
+        \end{itemize}
 
-        % Außerdem müssen die \acrshort{ts} mit dem neuen Feature nicht mehr so oft eine
-        % Zugriffsanfrage an den \Gls{facherrichter} stellen, um technische Probleme zu identifizieren.
-        % Dies verbessert die Effizienz der \acrshort{ts} und die Zufriedenheit der \Gls{endnutzer}
-        % und \Gls{facherrichter}, da ihr Problem schneller gelöst werden kann.
+    \subsection{Ist-Analyse}
+
+    Das bestehende System besteht aus einem Backend, einem Frontend und einer \Gls{mongodb}-Datenbank.
+    Das Backend ist mit \textit{ASP.NET} implementiert und stellt eine \textit{REST-API} bereit, die vom
+    \textit{Angular}-Frontend genutzt wird. Das Backend hat außerdem viele Schnittstellen zu weiteren
+    internen und externen Systemen, wie z.B. einen \textit{Service Bus}, ein \textit{IoT Hub}, Systeme von
+    \acrshort{abus} usw. Das Frontend wird von einem \textit{Node.js}-Server an die Clients ausgeliefert, der
+    gleichzeitig auch als ein \textit{Proxy} für die API-Anfragen fungiert.
+    Eine abstrakte Übersicht der Architektur ist in der Abbildung \ref{fig:system-architecture} dargestellt.
+
+    Die \Gls{mongodb}-Datenbank speichert alle Gerätedaten, darunter auch die
+    Gerätenachrichten, die für die Auswertung benötigt werden. Sie sind in einer sog.
+    \Gls{collection} gespeichert, die den Namen \texttt{common-messages} trägt. Jedes Dokument in
+    dieser \Gls{collection} repräsentiert eine einzelne Gerätenachricht und hat folgendes Format
+    (nur relevante Felder dargestellt):
+
+    \begin{verbatim}
+    {
+        deviceId: Guid,             // ID des Geräts, das die Nachricht gesendet hat
+        messageType: "string",      // Typ der Nachricht (z.B. "connectEvent")
+        deviceType: "string",       // Typ des Geräts (z.B. "Secoris")
+        enqueueTimeUtc: Date,       // Eingangszeit der Nachricht in UTC
+        rawPayload: object          // Rohdaten der Nachricht
+        ...                         // weitere Felder
+    }
+    \end{verbatim}
+
+    Grundsätzlich soll als Nachrichtenart der \texttt{messageType} ausgewertet werden.
+    Allerdings ist dieser Typ nicht immer aussagekräftig genug, da manche Gerätetypen
+    auch viel detailliertere Typen in den \texttt{rawPayload}-Daten haben. Daher
+    muss die genaue Auswertung je nach Gerätetyp unterschiedlich implementiert werden.

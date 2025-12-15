@@ -1,4 +1,4 @@
-\section{Konzeptionsphase}
+\section{Konzeptionsphase} \label{sec:conceptualize}
 
     \subsection{Namensgebung}
 
@@ -9,18 +9,18 @@
 
     \subsection{Backend-Architektur}
 
+    Das Backend ist in ASP.NET Core als ein \textit{modularer Monolith} aufgebaut. Es besteht aus dem Common-Modul und mehreren Device-Modulen, die keine
+    Abhängigkeiten untereinander haben dürfen. Eine visuelle Darstellung der Architektur ist in der folgenden Abbildung dargestellt:
+
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.9\textwidth]{../figures/backend-overview.png}
         \caption{
             Allgemeine Übersicht der Backend-Architektur
         }
-        \label{fig:backend-overview}
     \end{figure}
 
-    Das Backend ist in ASP.NET Core als ein modularer Monolith aufgebaut. Es besteht aus dem Common-Modul und mehreren Device-Modulen, die keine
-    Abhängigkeiten untereinander haben dürfen. Eine visuelle Darstellung der Architektur ist in der Abbildung \ref{fig:backend-overview} zu sehen.
-
+    Die Module haben folgende Eigenschaften:
     \begin{itemize}
         \item Das \texttt{Common-Modul} stellt geräteübergreifende Features und Funktionalitäten bereit, wie z.B. Authentifizierung, Profilverwaltung
         und Gerätesuche.
@@ -31,15 +31,18 @@
         das von den Device-Modulen implementiert und in der \textit{ASP.NET Core \acrfull{di}} registriert wird.
     \end{itemize}
 
-    Die Device Analysis ist genau so ein Feature. Es gibt eine allgemeine Implementierung, die im Common-Modul
-    implementiert ist. Die Device-Module können ihre eigenen Implementierungen eines im Common-Modul definierten Interfaces bereitstellen und
-    sich somit im Common-Modul registrieren. Je nachdem ob eine Implementierung für ein Gerätetyp vorhanden ist oder nicht, wird diese
-    oder eine Standard-Implementierung im Common-Modul verwendet. Dies entspricht dem Strategy-Pattern.
+    Die Device Analysis ist genau so ein Feature. Es wird eine allgemeine Implementierung im Common-Modul geben.
+    Die Device-Module, wenn sie dies brauchen, werden ihre eigenen Implementierungen eines im Common-Modul definierten
+    Interfaces bereitstellen und sich somit im Common-Modul registrieren. Je nachdem ob eine Implementierung für ein
+    Gerätetyp vorhanden ist oder nicht, wird diese oder eine Standard-Implementierung im Common-Modul verwendet.
+    Dies entspricht dem \textit{Strategy-Pattern}.
 
     \subsection{Rest API}
 
-    Der Endpunkt wird unter dem Pfad \texttt{api/core/DeviceAnalysis/\{deviceId\}/MessageStatistics} implementiert. Dieser Pfad folgt dem bestehenden Muster (api/[Modul]/[Feature]/\{deviceId\}) und ist leicht verständlich.
-    Außerdem ermöglicht dieses Schema eine einfache Erweiterung in der Zukunft, falls weitere Analyse-Endpunkte neben der MessageStatistics hinzugefügt werden sollen.
+    Für die Kommunikation zwischen Frontend und Backend wird ein neuer REST API Endpunkt im Common-Modul des Backends erstellt.
+    Der Endpunkt wird unter dem Pfad \texttt{api/core/DeviceAnalysis/\{deviceId\}/MessageStatistics} implementiert. Dieser Pfad
+    folgt dem bestehenden Muster (api/[Modul]/[Feature]/\{deviceId\}) und ist leicht verständlich. Außerdem ermöglicht dieses Schema
+    eine einfache Erweiterung in der Zukunft, falls weitere Analyse-Endpunkte neben der MessageStatistics hinzugefügt werden sollen.
 
     Die Device-Id wird als Pfadparameter übergeben. Alle anderen Parameter werden als Query-Parameter übergeben. Das sind:
     \begin{itemize}
@@ -60,7 +63,7 @@
 
     \subsection{Frontend-Architektur}
 
-    Das Frontend ist in Angular als eine Single-Page Application (SPA) aufgebaut. Ähnlich wie im Backend gibt es Common-Module, Feature-Module und Device-Module.
+    Das Frontend ist in Angular als eine \textit{Single-Page Application} (SPA) aufgebaut. Ähnlich wie im Backend gibt es Common-Module, Feature-Module und Device-Module.
     \begin{itemize}
         \item Die \texttt{Common-Module} enthalten feature- und geräteübergreifende Komponenten, Services und Utilities, die von allen anderen Modulen genutzt werden können.
         \item Die \texttt{Feature-Module} sind für nicht-gerätespezifische aber selbstständige Features zuständig, wie z.B. Suchseite, Profilseite usw.
@@ -70,7 +73,7 @@
     \end{itemize}
 
     Die Auswertungsansicht soll in jede Geräte-Detailansicht als Tab eingebaut werden. Daher wird sie einmal im Device-Common-Modul implementiert und von den Device-Modulen
-    genutzt. Allerdings muss das Routing und die Anzeigelogik von Tabs in jedem Device-Modul geändert werden, da jedes Modul seine eigenen Routen und Tabs verwaltet.
+    genutzt. Allerdings muss das \Gls{routing} und die Anzeigelogik von Tabs in jedem Device-Modul geändert werden, da jedes Modul seine eigenen Routen und Tabs verwaltet.
     Damit die Rollen \acrshort{pm} und \acrshort{ts} ohne Freigabe durch den Facherrichter auf die Auswertungsansicht zugreifen können, muss die Sichtbarkeit der Tabs
     in allen Device-Modulen überarbeitet werden.
 
