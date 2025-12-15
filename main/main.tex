@@ -4,9 +4,15 @@
 \usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=1.5cm]{geometry}
 \usepackage{amsmath, graphicx, listings, parskip, float, lastpage, fancyhdr, booktabs}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{microtype} % Prevents text overflow with micro-typographic adjustments
+\sloppy % Allows more flexible line breaking
 \usepackage[acronym]{glossaries}
 \usepackage{lipsum}
 \usepackage{colortbl}
+
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{lightgreen}{cmyk}{0.43, 0, 0.79, 0}
+
 \input{../common/metadata.tex}
 
 \makeglossaries
@@ -34,7 +40,7 @@
 }
 \pagebreak
 
-\printglossary[nonumberlist, title=Glossar]
+\printglossary[nonumberlist, title=Glossar]\label{sec:glossary}
 \printglossary[type=\acronymtype, nonumberlist, title=Abkürzungsverzeichnis]
 \pagebreak
 
@@ -79,6 +85,9 @@
 \vspace{-1.5em}
 \bibliographystyle{alpha}
 \bibliography{../bib/sample}
+
+\pagebreak
+\input{ai-notice.tex}
 
 \pagebreak
 \renewcommand{\lstlistingname}{Quellcode}

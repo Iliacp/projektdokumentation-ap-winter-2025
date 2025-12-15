@@ -6,14 +6,10 @@ namespace ABUS.Cloud.Portal.Common.Tests.DeviceAnalysis
 	{
 		// Fixture = gemeinsame Testumgebung fuer Integrationstests
 		private readonly IntegrationTestFixture _fixture;
-
 		// Das zu testende Repository
 		private readonly IDeviceAnalysisRepository _repository; 
-
 		private static readonly Guid _deviceId = Guid.NewGuid();
-
 		private static readonly DateTime _now = DateTime.UtcNow;
-
 		// die folgenden englischen Kommentare sind auch im Originalcode vorhanden
 		private readonly MessageSinkEntry[] _testingData = [
 			// Last year
