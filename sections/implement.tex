@@ -2,30 +2,35 @@
 
     \subsection{Backend}
 
-    % GENAUER BESCHREIBEN
+    Im Backend wurde ein neuer \Gls{controller} \texttt{DeviceAnalysisController} im Common-Modul erstellt, der den Endpunkt
+    \texttt{api/core/DeviceAnalysis/{deviceId}/MessageStatistics} bereitstellt. Die Hauptaufgabe des \Gls{controller}s ist es, die
+    passende Implementierung des \texttt{IDeviceAnalysisRepository} Interface basierend auf dem \texttt{deviceType} Query-Parameter auszuwählen
+    und die Anfrage an diese Implementierung weiterzuleiten.
 
-    Im Backend wurde ein neuer Controller \texttt{DeviceAnalysisController} im Common-Modul erstellt, der den Endpunkt
-    \texttt{api/core/DeviceAnalysis/{deviceId}/MessageStatistics} bereitstellt. Um die Feature-Implementierung einfach
-    zu halten, wurde auf ein Service Layer verzichtet und die (geräte- und datenbank-unabhängige) Logik direkt im Controller implementiert.
+    Das \texttt{IDeviceAnalysisRepository} ist, wie der Name schon sagt, ein \Gls{repository}-Interface. Das heißt, es ist für die
+    Kommunikation mit der Datenbank zuständig. Jede Implementierung des Interfaces ist für einen bestimmten Gerätetyp zuständig und hat
+    eine Methode \texttt{IsRepositoryFor(deviceType)}, die überprüft, ob die Implementierung für den angegebenen Gerätetyp zuständig ist.
 
-    Der Controller nutzt die \acrshort{di}, um alle Implementierungen des im Common-Modul definierten Interfaces \texttt{IDeviceAnalysisRepository}
-    zu erhalten. Jede Implementierung ist für einen bestimmten Gerätetyp zuständig und wird im jeweiligen Device-Modul registriert. Der Controller wählt die passende Implementierung
-    basierend auf dem \texttt{deviceType} Query-Parameter aus, indem er die \texttt{IsRepositoryFor(deviceType)} Methode des Interfaces aufruft. Falls keine Implementierung
-    für den angegebenen Gerätetyp gefunden wird, wird die Standard-Implementierung aus dem Common-Modul verwendet.
+    Die Standard-Implementierung des \texttt{IDeviceAnalysisRepository} Interface im Common-Modul führt eine generische Datenbank-Abfrage aus,
+    die alle Nachrichten von dem angegebenen Gerät in dem gewählten Zeitraum aggregiert und die Häufigkeit der Nachrichten pro
+    \texttt{messageType} zählt. Diese Implementierung funktioniert für alle Gerätetypen, kann aber nur die generischen Nachrichtentypen verarbeiten.
+    Ihre \texttt{IsRepositoryFor(deviceType)} Methode gibt immer \texttt{false} zurück, da sie für keinen spezifischen Gerätetyp zuständig ist.
+    Sie wird als ein sog. \textit{Keyed Singleton} in der \acrshort{di} registriert, sodass der \Gls{controller} sie separat von den gerätespezifischen
+    Implementierungen injizieren kann. Dies wird mit einem Attribut \texttt{[FromKeyedServices(key)]} im Konstruktor des \Gls{controller}s erreicht.
 
-    Die Standard-Implementierung wird in der \acrshort{di} als ein sog. \textit{Keyed Singleton} registriert. Das bedeutet, dass man über das Attribut \texttt{[FromKeyedServices(key)]}
-    \textit{eine bestimmte Implementierung} des Interfaces anfordern kann. So kann die Standard-Implementierung separat von den gerätespezifischen Implementierungen injiziert werden,
-    ohne dass man sie in der \acrshort{di} mit ihrer eigenen Klasse registrieren muss.
+    Einige Gerätetypen (derzeit nur \textit{Secoris}) haben spezifischere Nachrichtentypen, die in der Standard-Implementierung nicht berücksichtigt
+    werden können. Sie werden aus dem \texttt{rawPayload}-Feld der Nachricht extrahiert, welches gerätespezifisch deserialisiert werden muss. Außerdem
+    müssen bei \textit{Secoris} einige Nachrichtentypen gefiltert werden, da sie für die Auswertung nicht relevant sind. Dafür registriert das
+    \textit{Secoris}-Device-Modul eine eigene Implementierung des \texttt{IDeviceAnalysisRepository} Interface in der \acrshort{di}, die diese
+    gerätespezifische Abfrage enthält. Ihre \texttt{IsRepositoryFor(deviceType)} Methode gibt \texttt{true} zurück, wenn der \texttt{deviceType}-Parameter
+    den Wert \texttt{"hyen"} hat (der interne Name für \textit{Secoris}-Geräte).
 
-    Jede Implementierung des \texttt{IDeviceAnalysisRepository} Interface ist für die Kommunikation mit der jeweiligen Datenbank zuständig.
-    Derzeit gibt es neben der Standard-Implementierung nur eine gerätespezifische Implementierung für das Device-Modul \texttt{Secoris}. Die beiden
-    Implementierungen nutzen dieselbe \Gls{collection} in der \Gls{mongodb}-Datenbank, fragen diese aber auf eine unterschiedliche Weise ab.
+    Die Ergebnisse der Datenbank-Abfrage werden in ein sog. \textit{Data Transfer Object} (DTO) umgewandelt und als JSON-Antwort an das Frontend
+    zurückgegeben. Das DTO ist ein einfaches Objekt, das die Nachrichtentypen und deren Häufigkeit als Schlüssel-Wert-Paare enthält.
 
     Eine grafische Darstellung der Backend-Architektur des neuen Features ist in der Abbildung \ref{fig:backend-architecture} zu sehen.
 
     \subsection{Frontend} \label{sec:implementation-frontend}
-
-    % GENAUER BESCHREIBEN
 
     Im Frontend wurde mit dem \Gls{routing} und der Anzeigelogik in den Device-Modulen begonnen, weil das der Teil war, in dem es die größte Unsicherheit gab.
     Die Implementierung der Auswertung selbst im Device-Common-Modul war relativ einfach, da es nur eine Komponente mit einem Diagramm und einer Datumsauswahl ist.
@@ -83,8 +88,6 @@
         }
     \end{figure}
 
-
-    %% VLLT. DAS ÜBERSCHREIBEN
     Die Hauptaspekte der neuen Implementierung sind:
     \begin{itemize}
         \item Die Geräte registrieren in ihren Gerätekachel-Komponenten (siehe Quellcode \ref{code:frontend-secoris-action-registration})
