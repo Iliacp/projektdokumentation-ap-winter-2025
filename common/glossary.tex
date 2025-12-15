@@ -6,26 +6,62 @@
 
 \newacronym{di}{DI}{Dependency Injection}
 
-\newglossaryentry{collection}
-{
-    name=collection,
-    description={
-        Im Kontext der MongoDB ist eine Collection ein Container für Dokumente mit (meist) ähnlicher Struktur,
-        ähnlich wie eine Tabelle in einer relationalen Datenbank}
-}
-
 \newglossaryentry{mongodb}
 {
     name=MongoDB,
+    sort=tech1,
     description={
-        MongoDB ist eine dokumentenorientierte NoSQL-Datenbank. Anstatt Daten in Tabellen zu speichern,
+        MongoDB ist eine dokumentenorientierte NoSQL-Datenbank. Anstatt Daten in Tabellenspalten zu speichern,
         wie es bei relationalen Datenbanken der Fall ist, speichert MongoDB Daten in
-        flexiblen BSON \textit{(Binary JSON)} Dokumenten}
+        flexiblen BSON \textit{(Binary JSON)} Dokumenten, die in \Gls{collection}s organisiert sind
+        \cite{mongodb,mongodb-collections}}
+}
+
+\newglossaryentry{collection}
+{
+    name=Collection,
+    sort=tech2,
+    description={
+        Im Kontext der MongoDB ist eine Collection ein Container für Dokumente mit (meist) ähnlicher Struktur,
+        ähnlich wie eine Tabelle in einer relationalen Datenbank
+        \cite{mongodb-collections}}
+}
+
+\newglossaryentry{rwd}
+{
+    name=Responsive Web Design,
+    sort=tech3,
+    description={
+        Laut MDN\cite{rwd} ist Responsive Web Design (RWD) \textit{"ein Ansatz im Webdesign, um sicherzustellen,
+        dass Webseiten auf allen Bildschirmgrößen und -auflösungen gut dargestellt werden und
+        gleichzeitig eine gute Benutzerfreundlichkeit gewährleisten"}}
+}
+
+\newglossaryentry{routing}
+{
+    name=Routing,
+    sort=tech4,
+    description={
+        Routing im Kontext von \textit{Single-Page Applications} (SPAs) bezieht sich auf den Mechanismus,
+        der es ermöglicht, den Seiteninhalt anhand der URL dynamisch zu ändern, ohne die gesamte Seite neu zu laden.
+        Wie das in Angular funktioniert, wird in \cite{routing} beschrieben}
+}
+
+\newglossaryentry{repository}
+{
+    name=Repository,
+    sort=tech5,
+    description={
+        Das Repository-Muster ist ein Entwurfsmuster im \textit{Domain-Driven Design} (DDD), das eine Abstraktionsschicht
+        zwischen der Domänenschicht und der Datenzugriffsschicht bereitstellt. Es kapselt die Logik zum Abrufen,
+        Speichern und Verwalten von Daten. Repositories werden meist als Interfaces in der Domänenschicht definiert
+        und in der Datenzugriffsschicht implementiert \cite{repository}}
 }
 
 \newglossaryentry{ts-gls}
 {
     name=Technischer Support,
+    sort=role3,
     description={
         Der \acrfull{ts} ist eine Mitarbeiterrolle bei \acrshort{abus}, die Kunden bei technischen Problemen mit
         ihren Geräten unterstützt. Ein \acrshort{ts} hat Zugriff auf das \acrshort{portal} und kann dort
@@ -36,6 +72,7 @@
 \newglossaryentry{pm-gls}
 {
     name=Produktmanager,
+    sort=role4,
     description={
         Der \acrfull{pm} ist eine Mitarbeiterrolle bei \acrshort{abus}, die für eine Produktlinie
         (z.B. Secoris) verantwortlich ist. Ein \acrshort{pm} kann ungenutzte Geräte im \acrshort{portal}
@@ -46,6 +83,7 @@
 \newglossaryentry{facherrichter}
 {
     name=Facherrichter,
+    sort=role2,
     description={
         Ein Facherrichter ist ein Händler oder Vertriebspartner, der die Produkte von \acrshort{abus}
         an Endkunden verkauft. Sie sind Kunden von \acrshort{abus}. \\
@@ -59,6 +97,7 @@
 \newglossaryentry{endnutzer}
 {
     name=Endnutzer,
+    sort=role1,
     description={
         Die Endnutzer können sowohl Privat- als auch Gewerbekunden sein.
         Sie sind Kunden von \acrshort{abus}. Privatkunden dürfen ein
