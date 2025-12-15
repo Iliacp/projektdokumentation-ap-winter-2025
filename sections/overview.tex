@@ -2,20 +2,24 @@
 
     \subsection{Projektumfeld}
 
-    Die conplement AG ist ein mittelständisches IT-Dienstleister, das individuelle Lösungen in Bereichen
-    wie Web, Embedded und Mobile anbietet. Dazu gehört das \acrfull{portal} für den Kunden \acrfull{abus}.
-    \acrshort*{abus} ist ein Hersteller von Alarmanlagen, Videoüberwachungs- und Zutrittskontrollsystemen.
+    Die conplement AG ist ein mittelständischer IT-Dienstleister mit ca. 130 Mitarbeitern, zwei Standorten
+    in Deutschland (Nürnberg und Dortmund) und fast 20 Jahren Markterfahrung. Sie bietet individuelle
+    Lösungen sowie Beratung in Bereichen wie Web, Embedded und Mobile.
+    
+    Dazu gehört das \acrfull{portal} für den Kunden \acrfull{abus}. \acrshort*{abus} ist eine Tochtergesellschaft
+    der ABUS KG mit Sitz in Augsburg, die seit 1999 Sicherheitssysteme für kleine und mittlere Unternehmen sowie Privatpersonen
+    anbietet. Das Produktportfolio umfasst unter anderem Alarmanlagen, Videoüberwachungs- und Zutrittskontrollsystemen.
 
-    Das \acrshort{portal} dient dazu, solche Geräte zu verwalten und zu warten. Dort kann man den Status
-    eines Geräts und ggf. dessen Komponenten ansehen, Gerätenachrichten abonnieren und (falls unterstützt)
-    ansehen, ein Gerät aus der Ferne warten und vieles mehr. Es gibt vier Rollen, die das \acrshort{portal}
-    in unterschiedlichem Umfang und für unterschiedliche Zwecke nutzen können: \Gls{endnutzer}, \Gls{facherrichter},
-    \Gls{ts-gls} und \Gls{pm-gls}. Jede Rolle ist im \hyperref[sec:glossary]{Glossar} detailliert beschrieben.
+    Das \acrlong*{portal} dient dazu, solche Geräte zu verwalten und zu warten. Dort kann man den Status eines
+    Geräts und ggf. dessen Komponenten ansehen, Gerätenachrichten abonnieren und Logs einsehen sowie ein Gerät
+    aus der Ferne konfigurieren. Es gibt vier Rollen, die das \acrshort{portal} in unterschiedlichem Umfang und
+    für unterschiedliche Zwecke nutzen können: \Gls{endnutzer}, \Gls{facherrichter}, \Gls{ts-gls} und \Gls{pm-gls}.
+    Jede Rolle ist im \hyperref[sec:glossary]{Glossar} detailliert beschrieben.
 
     Das conplement-Entwicklungsteam vom \acrshort{portal} besteht aus einer Projektmanagerin, einem
-    Softwarearchitekten, zwei Fullstack-Entwicklern und einem Auszubildenden (mir), ebenfalls
-    als Fullstack-Entwickler tätig. Das Team arbeitet eng mit dem Product Owner von \acrshort{abus}
-    zusammen und setzt agile Methoden wie Scrum und Kanban ein, um die Entwicklung effizient zu gestalten.
+    Softwarearchitekten, zwei Fullstack-Entwicklern und einem Auszubildenden (mir), ebenfalls als
+    Fullstack-Entwickler tätig. Das Team arbeitet eng mit dem Product Owner von \acrshort{abus} zusammen
+    und setzt agile Methoden wie Kanban ein, um die Entwicklung sowie den Betrieb effizient zu gestalten.
 
     \subsection{Projektziel}
 
@@ -23,7 +27,7 @@
     das dem \acrshort{ts} ermöglicht, die Häufigkeit und Art von Gerätenachrichten für ein
     bestimmtes Gerät über einen bestimmten Zeitraum zu analysieren. Dies soll auch ohne
     Freigabe durch den \Gls{facherrichter} oder \Gls{endnutzer} möglich sein. Ein \acrshort{pm}
-    soll ebenfalls Zugriff auf diese Funktionalität haben, aber die Hauptzielgruppe sind die
+    soll ebenfalls Zugriff auf diese Funktionalität haben, aber die Hauptzielgruppe ist der
     \acrshort{ts}.
 
     Ein Auszug aus den Anforderungen des Kunden beschreibt das Ziel wie folgt (im Original auf Englisch):
@@ -46,14 +50,17 @@
 
     \subsection{Projektbegründung}
 
-    Momentan kann ein \acrshort{ts} nur bei Geräten der Produktlinie \textit{Secoris} die Gerätenachrichten
-    ansehen. Dazu muss er jedoch eine Freigabe vom \Gls{facherrichter} oder \Gls{endnutzer} einholen,
-    was den Support-Prozess verlangsamt. Außerdem hat die Secoris-Log-Ansicht keine grafische Darstellung
-    der Nachrichtenhäufigkeit, was die Analyse erschwert.
+    Momentan kann ein \acrshort{ts} nur bei Geräten der Produktlinie \textit{Secoris}\footnote{
+        Für andere Gerätetypen ist die Anzeige von Logs im \acrshort{portal} erst für die Zukunft geplant.
+    }
+    die Gerätenachrichten ansehen. Dazu muss er jedoch aus Datenschutzgründen eine Freigabe vom \Gls{facherrichter} oder
+    \Gls{endnutzer} einholen, was den Support-Prozess verlangsamt. Außerdem hat die Secoris-Log-Tabelle keine grafische
+    Darstellung der Nachrichtenhäufigkeit, was die Analyse und Erkennung von Mustern erschwert.
 
-    Das neue Feature soll diese Probleme lösen und die Effizienz des technischen Supports verbessern. Dadurch
-    können sowohl monetäre als auch nicht-monetäre Vorteile für \acrshort{abus} entstehen, wie in der
-    \ref{sec:profitability-analysis} beschrieben.
+    Das neue Feature soll diese Probleme lösen und die Effizienz des technischen Supports verbessern. Die Einsicht bleibt nur
+    auf die Daten beschränkt, die für die Störungsbehebung notwendig sind. Somit wird Datenschutz weiterhin gewährleistet.
+    Durch die schnellere Problemlösung können sowohl monetäre als auch nicht-monetäre Vorteile für \acrshort{abus} entstehen,
+    wie in der \ref{sec:profitability-analysis} beschrieben.
 
     \subsection{Projektschnittstellen}
 
@@ -61,8 +68,8 @@
     \begin{itemize}
         \item Die Daten für die Analyse stammen aus der bestehenden \Gls{mongodb}-Datenbank. Sie müssen ausgelesen
         und aggregiert werden.
-        \item Dies wird in einem bestehenden Backend passieren, das in C\# mit ASP.NET implementiert ist.
-        \item Die Auswertungsansicht muss in das bestehende Frontend von dem \acrshort{portal} integriert werden.
+        \item Dies wird im bestehenden Backend passieren, das in C\# mit ASP.NET implementiert ist.
+        \item Die Auswertungsansicht muss in das bestehende Frontend vom \acrshort{portal} integriert werden.
         \item Für die DevOps-Prozesse (Build, Tests, Deployment) werden bestehende Pipelines und Tools in
         \textit{Azure DevOps} verwendet.
     \end{itemize}
@@ -74,7 +81,7 @@
         wird der Product Owner von \acrshort{abus} kontaktiert. Die Ergebnisse des Projekts
         werden ebenfalls ihm präsentiert.
         \item Für das UI-Design wird der UI-Designer von \acrshort{abus} einbezogen.
-        \item Die Nutzer des neuen Features sind die \acrshort{ts} und \acrshort{pm} von \acrshort{abus}.
+        \item Die Nutzer des neuen Features sind \acrshort{ts} und \acrshort{pm} von \acrshort{abus}.
     \end{itemize}
 
     \subsection{Projektabgrenzung}
@@ -90,7 +97,7 @@
         optimiert. Daher wird das neue Feature ebenfalls nur für die Desktop-Ansicht
         implementiert.
         \item Diagramme: Die Darstellung der Daten in Diagrammen wird mit einer
-        externen Bibliothek umgesetzt und ist nicht Teil des Projekts.
+        externen Bibliothek umgesetzt
     \end{itemize}
 
     \subsection{Projektphasen}

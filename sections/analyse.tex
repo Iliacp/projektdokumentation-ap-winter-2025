@@ -2,7 +2,7 @@
 
     \subsection{Wirtschaftlichkeitsanalyse} \label{sec:profitability-analysis}
 
-        Für die Conplement AG lohnt sich das Projekt schon deswegen, weil im Vertrag
+        Für die conplement AG lohnt sich das Projekt schon deswegen, weil im Vertrag
         mit der \acrshort{abus} zusätzlich zu den Projektkosten auch ein Gewinnaufschlag und
         ein Risikozuschlag vereinbart wurde (die genaue Höhe ist vertraulich). Somit sind die
         Projektkosten gedeckt und es wird zusätzlich ein Gewinn erzielt.
@@ -10,7 +10,7 @@
         \subsubsection{Projektkosten}
 
         Die Projektkosten setzen sich aus den Personalkosten der beteiligten Mitarbeiter
-        der Conplement AG zusammen. Alle verwendeten Ressourcen sind bereits im Stundensatz
+        der conplement AG zusammen. Alle verwendeten Ressourcen sind bereits im Stundensatz
         der Mitarbeiter einkalkuliert, sodass keine zusätzlichen Kosten anfallen.
 
         Für einen Azubi (mich) ist ein Stundensatz von 35€ veranschlagt, während für
@@ -44,11 +44,11 @@
 
         Genaue Zahlen zur Amortisation des Projekts sind schwer zu ermitteln,
         da das Projekt keinen direkten Umsatz für \acrshort{abus} generiert.
-        Stattdessen spart das Projekt indirekt Kosten, indem es die Effizienz der
+        Stattdessen spart das Projekt indirekt Kosten, indem es die Effizienz des
         \acrshort{ts} verbessert.
 
         Basierend auf Gesprächen mit der \acrshort{abus} und Annahmen über die
-        Arbeitsweise der \acrshort{ts} lassen sich folgende Schätzungen treffen:
+        Arbeitsweise des \acrshort{ts} lassen sich folgende Schätzungen treffen:
 
         \begin{itemize}
             % \item Ein \acrshort{ts} arbeitet 35 Stunden pro Woche. - nicht relevant
@@ -57,7 +57,7 @@
             benötigt (angenommen).
             \item Bei ungefähr 10\% aller Geräte wird pro Jahr eine Support-Anfrage gestellt,
             die durch das neue Feature vereinfacht wird (angenommen).
-            \item Es sind insgesamt 6572 Geräte im \acrshort{portal} registriert (Stand: December 2025).
+            \item Es sind insgesamt 6.572 Geräte im \acrshort{portal} registriert (Stand: Dezember 2025).
         \end{itemize}
 
         Daraus ergeben sich folgende Berechnungen:
@@ -65,11 +65,11 @@
         \begin{itemize}
             \item Anzahl der Support-Anfragen pro Jahr:
             \[
-                6572 \text{ Geräte} \times 10\% = 657,2 \approx 657 \text{ Anfragen}
+                6.572 \text{ Geräte} \times 10\% = 657{,}2 \approx 657 \text{ Anfragen}
             \]
             \item Zeitersparnis pro Jahr durch das neue Feature:
             \[
-                657 \text{ Anfragen} \times 0,5 \text{ Stunden} = 328,5 \text{ Stunden}
+                657 \text{ Anfragen} \times 0{,}5 \text{ Stunden} = 328{,}5 \text{ Stunden}
             \]
             \item Kosteneinsparung pro Jahr:
             \[
@@ -77,20 +77,20 @@
             \]
             \item Kosteneinsparung pro Monat:
             \[
-                29.565\text{€} / 12 = 2.463,75\text{€}
+                29.565\text{€} / 12 = 2.463{,}75\text{€}
             \]
         \end{itemize}
 
         Also wird sich das Projekt für die \acrshort{abus} bereits nach etwa
         \[
-            3.320\text{€} / 2.463,75\text{€} \approx 1,35 \text{ Monate} \approx 2 \text{ Monate}
+            3.320\text{€} / 2.463{,}75\text{€} \approx 1{,}35 \text{ Monate} \approx 2 \text{ Monate}
         \]
         amortisieren, wenn die Annahmen zutreffen.
         
         Aber auch bei Abweichungen von diesen Annahmen ist es sehr wahrscheinlich,
-        dass sich das Projekt innerhalb weniger Monate amortisiert. Z.B. wenn nur 5\%
-        der Geräte pro Jahr eine Support-Anfrage stellen, bei der das neue Feature nur 15
-        Minuten spart, und der Stundensatz eines \acrshort{ts} nur 75€ beträgt, würde sich
+        dass sich das Projekt innerhalb weniger Monate amortisiert. Z.B. wenn nur für 5\%
+        der Geräte pro Jahr eine Support-Anfrage gestellt wird, bei der das neue Feature nur 15
+        Minuten spart und der Stundensatz eines \acrshort{ts} nur 75€ beträgt, würde sich
         das Projekt immer noch innerhalb von etwa einem halben Jahr amortisieren.
         
         \subsubsection{Nicht-monetäre Vorteile für den Kunden}
@@ -99,15 +99,15 @@
         durch das neue Feature:
 
         \begin{itemize}
+            \item Weniger Freigabeanfragen und somit mehr Zufriedenheit bei \Gls{endnutzer} und \Gls{facherrichter}
             \item Verringerte Arbeitslast der \acrshort{ts} und \acrshort{pm}
             \item Weniger Support-Anfragen, die an das Entwicklungsteam eskalieren
-            \item Weniger Freigabeanfragen und somit mehr Zufriedenheit bei \Gls{endnutzer} und \Gls{facherrichter}
             \item Neue Sichtweise auf die Gerätedaten und Erkenntnisse, die vorher nicht möglich waren
         \end{itemize}
 
     \subsection{Ist-Analyse}
 
-    Das bestehende System besteht aus einem Backend, einem Frontend und einer \Gls{mongodb}-Datenbank.
+    Das vorhandene System besteht aus einem Backend, einem Frontend und einer \Gls{mongodb}-Datenbank.
     Das Backend ist mit \textit{ASP.NET} implementiert und stellt eine \textit{REST-API} bereit, die vom
     \textit{Angular}-Frontend genutzt wird. Das Backend hat außerdem viele Schnittstellen zu weiteren
     internen und externen Systemen, wie z.B. einen \textit{Service Bus}, ein \textit{IoT Hub}, Systeme von
